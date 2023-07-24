@@ -1,0 +1,15 @@
+<div class="detail-container">
+  <img class="product-image" src="{{ product.url }}" alt="" />
+  <div class="detail-item">
+    <h3>{{ product.name }}</h3>
+    <p>$ {{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <input
+      type="number"
+      min="1"
+      required
+      [(ngModel)]="amount"
+      (ngModelChange)="handleChangeAmount()"
+    />
+  </div>
+</div>

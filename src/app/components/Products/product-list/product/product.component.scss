@@ -1,0 +1,31 @@
+.product-image {
+  list-style-type: none;
+  width: 290px;
+  padding: 20px;
+  margin: 6px 6px;
+  border: 1px solid #33B5E5;
+}
+
+.product-image:hover {
+  cursor: pointer;
+}
+
+.product-container {
+  margin-top: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.select-input {
+  width: 108px;
+  margin-bottom: 8px;
+}
+
+.button-add-cart {
+  background-color: #005CD1 !important;
+  color: #fff !important;;
+  margin-top: 20px !important;;
+}

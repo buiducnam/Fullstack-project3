@@ -1,0 +1,54 @@
+<div class="cart-container">
+  <div class="cart-panel">
+    <div class="cart-item" *ngFor="let product of products">
+      <app-product-cart
+        [product]="product"
+        (changeAmount)="changeAmount($event)"
+      ></app-product-cart>
+    </div>
+    <h2>Total: ${{ totalPrice }}</h2>
+  </div>
+  <div class="form-container">
+    <form #form="ngForm" class="form-container" (ngSubmit)="handleSubmit()">
+      <label for="fullName">Full name</label>
+      <input
+        placeholder="Minimun is 3 characters"
+        type="text"
+        name="fullName"
+        required
+        minlength="3"
+        class="input-text"
+        [(ngModel)]="fullName"
+      />
+      <label for="address">Address</label>
+      <input
+        placeholder="Minimun is 6 characters"
+        type="text"
+        name="address"
+        required
+        minlength="6"
+        class="input-text"
+        [(ngModel)]="address"
+      />
+      <label for="card">Credit card</label>
+      <input
+        placeholder="Minimun is 16 characters"
+        class="input-text"
+        type="text"
+        name="card"
+        required
+        minlength="16"
+        [(ngModel)]="creditCard"
+      />
+      <span>We will never share you payment details with anyone else</span>
+      <button
+        [disabled]="form.invalid || totalPrice === 0"
+        class="button-add-cart"
+        mat-raised-button
+        type="submit"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>
