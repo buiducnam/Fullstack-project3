@@ -11,6 +11,10 @@ export class ProductCartComponent implements OnInit {
   @Input() product: Product = new Product();
   amount: number = 1;
   @Output() changeAmount = new EventEmitter();
+  @Output() deleteProduct = new EventEmitter();
+
+  constructor(private httpService: HttpService){
+  }
 
 
   ngOnInit(): void {
@@ -19,5 +23,9 @@ export class ProductCartComponent implements OnInit {
 
   handleChangeAmount() {
     this.changeAmount.emit({ ...this.product, amount: Number(this.amount) });
+  }
+
+  handleDelete(){
+    this.deleteProduct.emit(this.product)
   }
 }

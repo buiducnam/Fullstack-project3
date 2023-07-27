@@ -40,11 +40,11 @@ export class HttpService {
       );
       this.cartList.push({...product, amount:Number(amount)})
     } else {
-      const findProduct = this.cartList.find(
+      const findProduct = this.cartList?.find(
         (item: Product) => item.id === product.id
       );
       if (findProduct) {
-        const data = this.cartList.map((item: Product) => {
+        const data = this.cartList?.map((item: Product) => {
           return item.id === findProduct.id
             ? { ...item, amount: Number(item.amount) + Number(amount) }
             : item;
@@ -59,6 +59,20 @@ export class HttpService {
       }
     }
 
+    
+  }
+
+  deleteProduct(product:any){
+    const localData = localStorage.getItem('cart');
+    if(localData && product){
+      var cart = JSON.parse(localData);
+      var index = cart.map(function(item: any) {
+        return item.id;
+      }).indexOf(product?.id);
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.cartList = cart;
+    }
     
   }
 

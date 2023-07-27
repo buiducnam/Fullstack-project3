@@ -1,9 +1,10 @@
-<div class="cart-container">
+<div class="cart-container" *ngIf="products.length > 0; else emptyCart">
   <div class="cart-panel">
     <div class="cart-item" *ngFor="let product of products">
       <app-product-cart
         [product]="product"
         (changeAmount)="changeAmount($event)"
+        (deleteProduct)="handleDelete($event)"
       ></app-product-cart>
     </div>
     <h2>Total: ${{ totalPrice }}</h2>
@@ -14,37 +15,77 @@
       <input
         placeholder="Minimun is 3 characters"
         type="text"
+        id="fullName"
         name="fullName"
         required
         minlength="3"
+        #username="ngModel"
         class="input-text"
         [(ngModel)]="fullName"
       />
+      <div *ngIf="username?.touched && username.invalid" class="warning-box">
+        <span *ngIf="username?.errors?.['required']" class="warning-errors"
+          >Full name is required!</span
+        >
+        <span *ngIf="username?.errors?.['minlength']" class="warning-errors"
+          >Full name at least 3 characters.</span
+        >
+      </div>
       <label for="address">Address</label>
       <input
         placeholder="Minimun is 6 characters"
         type="text"
+        id="address"
         name="address"
         required
         minlength="6"
+        #addresss="ngModel"
         class="input-text"
         [(ngModel)]="address"
       />
+      <div *ngIf="addresss?.touched && addresss.invalid" class="warning-box">
+        <span *ngIf="addresss?.errors?.['required']" class="warning-errors"
+          >Address is required!</span
+        >
+        <span *ngIf="addresss?.errors?.['minlength']" class="warning-errors"
+          >Address at least 6 characters.</span
+        >
+      </div>
       <label for="card">Credit card</label>
       <input
         placeholder="Minimun is 16 characters"
         class="input-text"
         type="text"
+        id="card"
         name="card"
         required
         minlength="16"
+        pattern="^[0-9]*$"
+        #creditCd="ngModel"
         [(ngModel)]="creditCard"
       />
+      <div
+        *ngIf="(creditCd.dirty || creditCd.touched) && creditCd.invalid"
+        class="warning-box"
+      >
+        <span *ngIf="creditCd?.errors?.['required']" class="warning-errors"
+          >Credit Card is required!</span
+        >
+        <span *ngIf="creditCd?.errors?.['pattern']" class="warning-errors"
+          >The input takes only numeric value.</span
+        >
+        <span
+          *ngIf="!creditCd?.errors?.['pattern'] && creditCd?.errors?.['minlength']"
+          class="warning-errors"
+          >CreditCard at least 16 characters.</span
+        >
+      </div>
       <span>We will never share you payment details with anyone else</span>
       <button
-        [disabled]="form.invalid || totalPrice === 0"
-        class="button-add-cart"
+        [disabled]="form.invalid"
+        [class]="{ 'button-submit-cart': form.valid }"
         mat-raised-button
+        color="primary"
         type="submit"
       >
         Submit
@@ -52,3 +93,11 @@
     </form>
   </div>
 </div>
+<ng-template #emptyCart>
+  <div class="empty-cart">
+    <p>Cart is empty!</p>
+    <button class="button-add-cart" mat-raised-button (click)="goHomePage()">
+      Back to product list
+    </button>
+  </div>
+</ng-template>

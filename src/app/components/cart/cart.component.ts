@@ -16,7 +16,7 @@ export class CartComponent implements OnInit {
   address: string = '';
   creditCard: string = '';
 
-  constructor(private httpService : HttpService , private router: Router) {
+  constructor(private httpService: HttpService, private router: Router) {
     this.products = this.httpService.cartList;
   }
 
@@ -40,7 +40,6 @@ export class CartComponent implements OnInit {
         }, 0)
         .toFixed(2)
     );
-
   }
 
   handleSubmit() {
@@ -50,4 +49,23 @@ export class CartComponent implements OnInit {
     this.httpService.clearCart();
   }
 
+  goHomePage() {
+    this.router.navigateByUrl('/');
+  }
+
+  handleDelete(product: any) {
+    const del = confirm('Remove this product from cart?');
+    if (del) {
+      this.httpService.deleteProduct(product);
+      this.products = this.httpService.cartList;
+
+      this.totalPrice = Number(
+        this.products
+          .reduce((value, nextValue) => {
+            return value + nextValue.price * Number(nextValue.amount);
+          }, 0)
+          .toFixed(2)
+      );
+    }
+  }
 }
