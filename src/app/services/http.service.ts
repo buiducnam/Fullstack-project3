@@ -7,77 +7,44 @@ import { Product } from '../models/Product';
   providedIn: 'root',
 })
 export class HttpService {
+  cartList: Product[] = [];
 
-  cartList : Product[] = []
-
-  constructor(private http: HttpClient) {
-    this.cartList =
-    localStorage.getItem('cart') &&
-    (JSON.parse(localStorage.getItem('cart') || '') || []) || [];
-  }
+  constructor(private http: HttpClient) {}
 
   getProducts(): Observable<[]> {
     return this.http.get<[]>('./assets/data.json');
   }
 
   changeProductQuantity(item: Product) {
-    this.cartList = this.cartList.map((product: Product) =>
-    {
-      if(product.id === item.id){
-        product = item
+    this.cartList = this.cartList.map((product: Product) => {
+      if (product.id === item.id) {
+        product = item;
       }
       return product;
-    }
-  );
-    return this.cartList
+    });
+    return this.cartList;
   }
 
-  addProductToCart(product: Product, amount:string){
-    if (this.cartList.length === 0) {
-      localStorage.setItem(
-        'cart',
-        JSON.stringify([{ ...product, amount: Number(amount) }])
-      );
-      this.cartList.push({...product, amount:Number(amount)})
+  addProductToCart(product: Product, amount: any) {
+    const findProduct = this.cartList.find((item) => item.id == product.id);
+    if (findProduct) {
+      const data = this.cartList?.map((item: Product) => {
+        return item.id === product.id
+          ? { ...item, amount: Number(item.amount) + Number(amount) }
+          : item;
+      });
+      this.cartList = [...data];
     } else {
-      const findProduct = this.cartList?.find(
-        (item: Product) => item.id === product.id
-      );
-      if (findProduct) {
-        const data = this.cartList?.map((item: Product) => {
-          return item.id === findProduct.id
-            ? { ...item, amount: Number(item.amount) + Number(amount) }
-            : item;
-        });
-        localStorage.setItem('cart', JSON.stringify(data));
-        this.cartList = [...data]; 
-       
-      } else {
-        const data = [...this.cartList, { ...product, amount: Number(amount) }];
-        localStorage.setItem('cart', JSON.stringify(data));
-        this.cartList = [...data];
-      }
+      this.cartList.push({ ...product, amount });
     }
-
-    
   }
 
-  deleteProduct(product:any){
-    const localData = localStorage.getItem('cart');
-    if(localData && product){
-      var cart = JSON.parse(localData);
-      var index = cart.map(function(item: any) {
-        return item.id;
-      }).indexOf(product?.id);
-      cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      this.cartList = cart;
-    }
-    
+  deleteProduct(product: any) {
+    const findIndex = this.cartList.findIndex((item) => item.id == product.id);
+    this.cartList.splice(findIndex, 1);
   }
 
-  clearCart(){
+  clearCart() {
     this.cartList = [];
-    localStorage.removeItem('cart');
   }
 }
